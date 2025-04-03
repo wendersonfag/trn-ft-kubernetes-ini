@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers: # define per container
+    - name: nginx
+      image: nginx
+      ports:
+      - containerPort: 80
+      readinessProbe:
+        httpGet:
+          path: /healthz
+          port: 80
+        initialDelaySeconds: 15 # seconds after all the containers in the pod are created 
+        periodSeconds: 10 # call the probe every 10 seconds       
+        timeoutSeconds: 5 # respond within the 1-second timeout
+        successThreshold: 1 # one probe must succeed before the container is considered healthy
+        failureThreshold: 3 # more than three consecutive probes fail, the container will fail and restart
